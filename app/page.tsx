@@ -20,6 +20,8 @@ import {
   Landmark,
   Target,
   Eye,
+  Linkedin,
+  Instagram,
 } from "lucide-react";
 
 const oroGradiente =
@@ -108,7 +110,88 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* ================= PERFIL DEL FUNDADOR (NUEVO APARTADO) ================= */}
+      <section className="py-24 px-6 max-w-7xl mx-auto overflow-hidden">
+        <div className="grid lg:grid-cols-12 gap-12 items-center">
+          {/* Imagen de Alvaro */}
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-5 relative"
+          >
+            <div
+              className={`absolute -inset-4 border-2 ${oroBorde} rounded-[3rem] translate-x-4 translate-y-4 -z-10`}
+            />
+            <div className="aspect-[4/5] rounded-[3rem] overflow-hidden border-2 border-[#BF953F] bg-zinc-800">
+              <img
+                src="https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=800"
+                alt="Alvaro Choquehuanca Apaza"
+                className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700"
+              />
+            </div>
+            {/* Etiqueta flotante */}
+            <div className="absolute -bottom-6 -right-6 bg-zinc-900 border border-[#BF953F] p-6 rounded-2xl shadow-2xl">
+              <p className={`text-xl font-black ${oroGradiente} uppercase`}>
+                Presidente Ejecutivo
+              </p>
+              <p className="text-xs tracking-widest uppercase opacity-60">
+                Corporación Choquehuanca
+              </p>
+            </div>
+          </motion.div>
 
+          {/* Biografía Profesional */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="lg:col-span-7 space-y-8"
+          >
+            <div>
+              <h2 className="text-[#BF953F] font-bold tracking-[0.3em] uppercase mb-2">
+                Fundador & CEO
+              </h2>
+              <h3 className="text-5xl font-black uppercase leading-tight">
+                Alvaro Choquehuanca Apaza
+              </h3>
+            </div>
+
+            <div className="space-y-6 text-xl font-light leading-relaxed opacity-80">
+              <p>
+                Visionario boliviano con más de{" "}
+                <strong>15 años de trayectoria</strong> en la creación y
+                escalamiento de modelos de negocio disruptivos. Bajo su
+                liderazgo, la Corporación Choquehuanca ha pasado de ser un
+                emprendimiento deportivo local a un{" "}
+                <strong>holding diversificado</strong> con impacto en los
+                sectores inmobiliario, hotelero y financiero.
+              </p>
+              <p>
+                Fundador de la <strong>Cámara Inmobiliaria de La Paz</strong>,
+                ha dedicado su carrera a formalizar el sector y crear puentes de
+                inversión sólida. Como experto en{" "}
+                <strong>Coaching con PNL</strong>, su filosofía integra el éxito
+                financiero con el desarrollo del potencial humano, bajo la
+                premisa de que la expansión de una empresa es el reflejo directo
+                de la mentalidad de quien la dirige.
+              </p>
+            </div>
+
+            <div className="flex gap-4 pt-4">
+              <div className="p-4 rounded-full border border-[#BF953F]/30 hover:bg-[#BF953F]/10 transition-all cursor-pointer">
+                <Linkedin size={24} className="text-[#BF953F]" />
+              </div>
+              <div className="p-4 rounded-full border border-[#BF953F]/30 hover:bg-[#BF953F]/10 transition-all cursor-pointer">
+                <Instagram size={24} className="text-[#BF953F]" />
+              </div>
+              <div className="px-8 py-4 rounded-full bg-[#BF953F] text-black font-black uppercase tracking-widest text-sm hover:scale-105 transition-transform cursor-pointer">
+                Contactar Presidencia
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
       {/* ================= HISTORIA RESUMIDA ================= */}
       <section className="py-24 px-6 max-w-7xl mx-auto border-y border-[#BF953F]/10">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
