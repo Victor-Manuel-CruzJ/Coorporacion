@@ -524,9 +524,6 @@ export default function CorporacionChoquehuancaFinal() {
     </div>
   );
 }
-
-// --- SUB-COMPONENTES PARA MAYOR CLARIDAD ---
-
 function HistoryCard({ icon, title, desc }: any) {
   return (
     <div className="bg-black/5 p-6 rounded-[2rem] border border-[#BF953F]/20 hover:border-[#BF953F] transition-all">
