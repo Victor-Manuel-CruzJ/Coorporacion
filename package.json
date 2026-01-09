@@ -9,12 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.4",
     "framer-motion": "^12.24.12",
     "lucide-react": "^0.562.0",
     "motion": "^12.24.12",
     "next": "16.1.1",
     "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "react-dom": "19.2.3",
+    "react-parallax-tilt": "^1.7.315"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
