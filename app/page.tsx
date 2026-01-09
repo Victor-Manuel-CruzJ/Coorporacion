@@ -1,5 +1,6 @@
 "use client";
 
+export const dynamic = "force-dynamic";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -558,4 +559,7 @@ function ContactItem({ icon, label, text, isDark }: any) {
       </div>
     </div>
   );
+  <div style={{ background: "red", color: "white", padding: 20 }}>
+    DEPLOY TEST {Date.now()}
+  </div>;
 }
