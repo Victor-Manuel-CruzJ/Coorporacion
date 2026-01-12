@@ -1,8 +1,8 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import {
   Building2,
   Hotel,
@@ -18,20 +18,63 @@ import {
   Moon,
   ArrowRight,
   X,
-  Rocket,
   Briefcase,
   Globe,
   Target,
   Gem,
   Zap,
-  CheckCircle2,
   Award,
+  // Nuevos iconos importados
+  PlayCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
+
+const videoData = [
+  {
+    id: "vid1",
+    url: "https://www.dropbox.com/scl/fi/6atn25qrqy402w13aymvv/C-psula-01.mp4?rlkey=pclpkdf4fo0s6ez4gg9kqsaf5&st=w8vdyhcz&raw=1",
+  },
+  {
+    id: "vid2",
+    url: "https://www.dropbox.com/scl/fi/qro7v3eattjpjysvrmmkv/C-psula-02.mp4?rlkey=5skryum9mut94nka76jgsm1at&st=g0drah68&raw=1",
+  },
+  {
+    id: "vid3",
+    url: "https://www.dropbox.com/scl/fi/vojt5iwni39wvsl3x4kes/C-psula-03.mp4?rlkey=32qzbrjfedper1ccwnjytzqh8&st=6sv9cq7j&raw=1",
+  },
+  {
+    id: "vid4",
+    url: "https://www.dropbox.com/scl/fi/it80w1evzx84s6bj3vykf/C-psula-04.mp4?rlkey=5p350s48z91zss5vdtqb24zly&st=9135d8fn&raw=1",
+  },
+  {
+    id: "vid5",
+    url: "https://www.dropbox.com/scl/fi/njpwbe6qrddgbieacgg7a/C-psula-05.mp4?rlkey=4i3wsg1ijkdtpt8bak0i5zxzb&st=5fxyqxv4&raw=1",
+  },
+  {
+    id: "vid6",
+    url: "https://www.dropbox.com/scl/fi/hu3b95v2gsw43hpxxb6dr/C-psula-06.mp4?rlkey=6wmbkd7dueuekjcaqvjrpd6jj&st=z9wqi4ju&raw=1",
+  },
+];
 
 export default function CorporacionChoquehuancaFinal() {
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [selectedService, setSelectedService] = useState<any>(null);
   const [showCEO, setShowCEO] = useState(false);
+
+  // Estados para el carrusel de video
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+  const [selectedVideo, setSelectedVideo] = useState<any>(null); // Para el modal de video
+
+  // Lógica del carrusel
+  const nextVideo = () => {
+    setCurrentVideoIndex((prev) => (prev + 1) % videoData.length);
+  };
+  const prevVideo = () => {
+    setCurrentVideoIndex(
+      (prev) => (prev - 1 + videoData.length) % videoData.length
+    );
+  };
 
   // --- DATOS COMPLETOS DE SERVICIOS PRINCIPALES ---
   const servicios = [
@@ -335,6 +378,118 @@ export default function CorporacionChoquehuancaFinal() {
         </div>
       </section>
 
+      {/* --- SECCIÓN: GALERÍA DE VIDEOS (CORREGIDA) --- */}
+      <section
+        className={`py-24 px-6 transition-colors duration-500 ${
+          isDarkMode ? "bg-[#050505]" : "bg-zinc-50"
+        }`}
+      >
+        {/* CAMBIO 2: Contenedor más pequeño (max-w-5xl en vez de 1400px) */}
+        <div className="max-w-5xl mx-auto">
+          <div className="mb-12 text-center md:text-left">
+            <h2 className="text-6xl font-black uppercase italic leading-none">
+              Cápsulas <br />
+              <span className="text-[#BF953F]">Corporativas</span>
+            </h2>
+          </div>
+
+          {/* Escenario del Video */}
+          <div className="relative group">
+            {/* CAMBIO 1 & 2: Aspecto de video normal y colores dinámicos según modo */}
+            <div
+              className={`relative aspect-video overflow-hidden rounded-[3rem] border shadow-2xl transition-colors duration-500 ${
+                isDarkMode
+                  ? "bg-zinc-900 border-white/5"
+                  : "bg-white border-black/5"
+              }`}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={currentVideoIndex}
+                  initial={{ opacity: 0, x: 100 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -100 }}
+                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                  className="absolute inset-0 w-full h-full"
+                  onClick={() => setSelectedVideo(videoData[currentVideoIndex])}
+                >
+                  {/* Video Preview */}
+                  <video
+                    src={videoData[currentVideoIndex].url}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                    // CAMBIO 1: Opacidad ajustada para que se vea bien en ambos modos
+                    className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1.5s] cursor-pointer"
+                  />
+
+                  {/* Botón Play */}
+                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div className="p-6 rounded-full bg-[#BF953F] text-black scale-0 group-hover:scale-100 transition-transform duration-500 shadow-[0_0_30px_rgba(191,149,63,0.5)]">
+                      <PlayCircle size={40} fill="currentColor" />
+                    </div>
+                  </div>
+
+                  {/* Indicador Numérico Inferior */}
+                  <div className="absolute bottom-8 left-10 flex items-center gap-4">
+                    <div className="h-[1px] w-16 bg-[#BF953F]/50" />
+                    <span className="text-4xl font-black italic text-[#BF953F]">
+                      0{currentVideoIndex + 1}
+                    </span>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+
+              {/* CAMBIO 3: Botones en los extremos DENTRO del video */}
+              <button
+                onClick={prevVideo}
+                className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full backdrop-blur-md border transition-all group/btn ${
+                  isDarkMode
+                    ? "bg-black/30 text-white hover:bg-black/60 border-white/10"
+                    : "bg-white/40 text-zinc-900 hover:bg-white/80 border-black/10"
+                } hover:border-[#BF953F]`}
+              >
+                <ChevronLeft
+                  className="group-hover/btn:-translate-x-1 transition-transform"
+                  size={24}
+                />
+              </button>
+              <button
+                onClick={nextVideo}
+                className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full backdrop-blur-md border transition-all group/btn ${
+                  isDarkMode
+                    ? "bg-black/30 text-white hover:bg-black/60 border-white/10"
+                    : "bg-white/40 text-zinc-900 hover:bg-white/80 border-black/10"
+                } hover:border-[#BF953F]`}
+              >
+                <ChevronRight
+                  className="group-hover/btn:translate-x-1 transition-transform"
+                  size={24}
+                />
+              </button>
+            </div>
+
+            {/* Puntos de navegación manual (dots) */}
+            <div className="flex justify-center gap-2 mt-8">
+              {videoData.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentVideoIndex(index)}
+                  className={`transition-all duration-500 rounded-full ${
+                    index === currentVideoIndex
+                      ? "w-12 h-1 bg-[#BF953F]"
+                      : `w-2 h-1 ${
+                          isDarkMode ? "bg-white/20" : "bg-black/20"
+                        } hover:bg-[#BF953F]/50`
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* --- CONTACTO Y MAPA (COLOR REAL) --- */}
       <section className="py-24 px-6 max-w-[1400px] mx-auto border-t border-white/5">
         <div className="grid lg:grid-cols-12 gap-16">
@@ -396,6 +551,7 @@ export default function CorporacionChoquehuancaFinal() {
 
       {/* --- MODALES DE INTERACCIÓN --- */}
       <AnimatePresence>
+        {/* MODAL DE SERVICIOS (EXISTENTE) */}
         {selectedService && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -454,6 +610,7 @@ export default function CorporacionChoquehuancaFinal() {
           </motion.div>
         )}
 
+        {/* MODAL DEL CEO (EXISTENTE) */}
         {showCEO && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -521,6 +678,48 @@ export default function CorporacionChoquehuancaFinal() {
             </motion.div>
           </motion.div>
         )}
+
+        {/* --- NUEVO MODAL PARA REPRODUCCIÓN DE VIDEO (CORREGIDO) --- */}
+        {selectedVideo && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-10 backdrop-blur-2xl bg-black/95"
+            onClick={() => setSelectedVideo(null)} // Cerrar al hacer click fuera
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              // Evitar cerrar al hacer click dentro del contenido
+              onClick={(e) => e.stopPropagation()}
+              // CAMBIO 1: Fondo dinámico en el modal
+              className={`w-full max-w-5xl relative rounded-[2rem] overflow-hidden shadow-2xl border border-[#BF953F]/30 ${
+                isDarkMode ? "bg-black" : "bg-white"
+              }`}
+            >
+              <button
+                onClick={() => setSelectedVideo(null)}
+                className="absolute top-4 right-4 text-white/70 hover:text-[#BF953F] z-20 bg-black/50 rounded-full p-1"
+              >
+                <X size={28} />
+              </button>
+              <div className="aspect-video w-full bg-black">
+                {/* Usamos video tag con controls y autoPlay. Importante: raw=1 en el link de dropbox */}
+                <video
+                  src={selectedVideo.url}
+                  controls
+                  autoPlay
+                  className="w-full h-full object-contain"
+                  // Eliminado poster={selectedVideo.thumbnail} porque no existe en tus datos
+                >
+                  Tu navegador no soporta el elemento de video.
+                </video>
+              </div>
+              {/* Eliminada la sección de título y descripción del modal porque no existen en tus datos */}
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
@@ -559,7 +758,4 @@ function ContactItem({ icon, label, text, isDark }: any) {
       </div>
     </div>
   );
-  <div style={{ background: "red", color: "white", padding: 20 }}>
-    DEPLOY TEST {Date.now()}
-  </div>;
 }
