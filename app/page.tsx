@@ -1,8 +1,8 @@
 "use client";
 
 export const dynamic = "force-dynamic";
-import { useState, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Building2,
   Hotel,
@@ -20,41 +20,59 @@ import {
   X,
   Briefcase,
   Globe,
-  Target,
-  Gem,
   Zap,
   Award,
-  // Nuevos iconos importados
   PlayCircle,
   ChevronLeft,
   ChevronRight,
+  ImageIcon,
+  Gem,
 } from "lucide-react";
 
+// --- DATOS DE VIDEO ---
 const videoData = [
   {
     id: "vid1",
     url: "https://www.dropbox.com/scl/fi/6atn25qrqy402w13aymvv/C-psula-01.mp4?rlkey=pclpkdf4fo0s6ez4gg9kqsaf5&st=w8vdyhcz&raw=1",
+    title: "Visión Corporativa",
   },
   {
     id: "vid2",
     url: "https://www.dropbox.com/scl/fi/qro7v3eattjpjysvrmmkv/C-psula-02.mp4?rlkey=5skryum9mut94nka76jgsm1at&st=g0drah68&raw=1",
+    title: "Desarrollo Inmobiliario",
   },
   {
     id: "vid3",
     url: "https://www.dropbox.com/scl/fi/vojt5iwni39wvsl3x4kes/C-psula-03.mp4?rlkey=32qzbrjfedper1ccwnjytzqh8&st=6sv9cq7j&raw=1",
+    title: "Experiencia Hotelera",
   },
   {
     id: "vid4",
     url: "https://www.dropbox.com/scl/fi/it80w1evzx84s6bj3vykf/C-psula-04.mp4?rlkey=5p350s48z91zss5vdtqb24zly&st=9135d8fn&raw=1",
+    title: "Crecimiento Humano",
   },
   {
     id: "vid5",
     url: "https://www.dropbox.com/scl/fi/njpwbe6qrddgbieacgg7a/C-psula-05.mp4?rlkey=4i3wsg1ijkdtpt8bak0i5zxzb&st=5fxyqxv4&raw=1",
+    title: "Inversiones",
   },
   {
     id: "vid6",
     url: "https://www.dropbox.com/scl/fi/hu3b95v2gsw43hpxxb6dr/C-psula-06.mp4?rlkey=6wmbkd7dueuekjcaqvjrpd6jj&st=z9wqi4ju&raw=1",
+    title: "Legado",
   },
+];
+
+// --- DATOS DE IMÁGENES (GALERÍA INFERIOR) ---
+const heroImages = [
+  "/01.jpeg",
+  "/02.jpeg",
+  "/03.jpeg",
+  "/04.jpeg",
+  "/05.jpeg",
+  "/06.jpeg",
+  "/07.jpeg",
+  "/08.jpeg",
 ];
 
 export default function CorporacionChoquehuancaFinal() {
@@ -62,9 +80,14 @@ export default function CorporacionChoquehuancaFinal() {
   const [selectedService, setSelectedService] = useState<any>(null);
   const [showCEO, setShowCEO] = useState(false);
 
-  // Estados para el carrusel de video
+  // Estados Video Principal
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
-  const [selectedVideo, setSelectedVideo] = useState<any>(null); // Para el modal de video
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+
+  // Estado Modal Imagen
+  const [selectedHeroImage, setSelectedHeroImage] = useState<string | null>(
+    null,
+  );
 
   // Lógica del carrusel
   const nextVideo = () => {
@@ -76,7 +99,7 @@ export default function CorporacionChoquehuancaFinal() {
     );
   };
 
-  // --- DATOS COMPLETOS DE SERVICIOS PRINCIPALES ---
+  // --- DATOS DE SERVICIOS ---
   const servicios = [
     {
       id: "hotel",
@@ -143,7 +166,6 @@ export default function CorporacionChoquehuancaFinal() {
         }`}
       >
         <div className="flex items-center gap-4">
-          {/* LOGO 1: NAVBAR */}
           <img
             src="logo.png"
             alt="Logo"
@@ -174,62 +196,112 @@ export default function CorporacionChoquehuancaFinal() {
         </button>
       </nav>
 
-      {/* --- HERO SECTION --- */}
-      <section className="pt-44 pb-20 px-6 max-w-[1400px] mx-auto text-center">
-        {/* LOGO 2: HERO */}
-        <motion.img
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          src="logo.png"
-          alt="Logo Hero"
-          className="w-32 h-32 mx-auto mb-10 rounded-2xl shadow-2xl border-2 border-[#BF953F]"
-        />
-
-        <h1 className="text-6xl md:text-[8vw] font-black uppercase tracking-tighter leading-none mb-4">
-          CORPORACIÓN <br />
-          <span className="text-transparent bg-clip-text bg-gradient-to-b from-[#BF953F] to-[#8A6E2F]">
-            CHOQUEHUANCA
-          </span>
-        </h1>
-        <p className="text-[#BF953F] font-black uppercase tracking-[0.4em] text-lg md:text-2xl italic mb-12">
-          "Piensa en grande piensa en expansión"
-        </p>
-
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto text-left">
+      {/* --- HERO SECTION MODIFICADA --- */}
+      <section className="pt-32 pb-12 px-6">
+        {/* 1. VIDEO CENTRAL ARRIBA (AGRANDADO) */}
+        {/* max-w aumentamos a 1600px o 'max-w-[90%]' para que sea grande */}
+        <div className="max-w-[1600px] mx-auto mb-20">
+          {" "}
+          {/* AUMENTÉ EL MARGIN BOTTOM A 20 PARA SEPARAR */}
           <div
-            className={`p-8 rounded-3xl border ${
+            className={`w-full aspect-video md:aspect-[21/9] relative overflow-hidden rounded-[3rem] border shadow-2xl group ${
               isDarkMode
-                ? "bg-white/5 border-white/10"
-                : "bg-zinc-50 border-black/5 shadow-sm"
+                ? "bg-zinc-900 border-white/10"
+                : "bg-zinc-100 border-black/5"
             }`}
           >
-            <h3 className="font-black text-[#BF953F] uppercase mb-3 flex items-center gap-3">
-              <Target size={20} /> Nuestra Misión
-            </h3>
-            <p className={subTextColor}>
-              "Ofrecer oportunidades de desarrollo para crear vidas de calidad a
-              través de la excelencia empresarial."
-            </p>
+            {/* Etiqueta */}
+            <div className="absolute top-8 left-8 z-20 flex items-center gap-2 bg-black/60 backdrop-blur-md px-5 py-2 rounded-full border border-white/10">
+              <PlayCircle className="text-[#BF953F]" size={18} />
+              <span className="text-white text-sm font-bold uppercase tracking-wider">
+                Presentación Oficial
+              </span>
+            </div>
+
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentVideoIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.8 }}
+                className="absolute inset-0 w-full h-full"
+                onClick={() => setSelectedVideo(videoData[currentVideoIndex])}
+              >
+                <video
+                  src={videoData[currentVideoIndex].url}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  className="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-all duration-[1.5s] cursor-pointer"
+                />
+                {/* Overlay Título */}
+                <div className="absolute bottom-0 left-0 right-0 p-12 bg-gradient-to-t from-black/90 to-transparent">
+                  <p className="text-[#BF953F] text-sm font-black uppercase tracking-widest mb-2">
+                    Cápsula {currentVideoIndex + 1}/{videoData.length}
+                  </p>
+                  <h3 className="text-white text-4xl md:text-6xl font-black italic uppercase leading-none">
+                    {videoData[currentVideoIndex].title}
+                  </h3>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {/* Botones de Navegación */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                prevVideo();
+              }}
+              className="absolute left-6 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-black/30 hover:bg-[#BF953F] text-white transition-all backdrop-blur-sm border border-white/10"
+            >
+              <ChevronLeft size={28} />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextVideo();
+              }}
+              className="absolute right-6 top-1/2 -translate-y-1/2 z-30 p-4 rounded-full bg-black/30 hover:bg-[#BF953F] text-white transition-all backdrop-blur-sm border border-white/10"
+            >
+              <ChevronRight size={28} />
+            </button>
           </div>
-          <div
-            className={`p-8 rounded-3xl border ${
-              isDarkMode
-                ? "bg-white/5 border-white/10"
-                : "bg-zinc-50 border-black/5 shadow-sm"
-            }`}
-          >
-            <h3 className="font-black text-[#BF953F] uppercase mb-3 flex items-center gap-3">
-              <Globe size={20} /> Nuestra Visión
-            </h3>
-            <p className={subTextColor}>
-              "Ser la principal empresa nacional de negocios e inversiones con
-              proyección internacional."
-            </p>
+        </div>
+
+        {/* 2. IMÁGENES DEBAJO (GALERÍA CLICKEABLE) */}
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center gap-3 mb-8 px-4 opacity-60">
+            <ImageIcon className="text-[#BF953F]" size={20} />
+            <span className="text-sm font-bold uppercase tracking-widest">
+              Galería Corporativa
+            </span>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {heroImages.map((img, idx) => (
+              <motion.div
+                key={idx}
+                whileHover={{ y: -5 }}
+                onClick={() => setSelectedHeroImage(img)}
+                className={`aspect-[4/3] rounded-3xl overflow-hidden cursor-pointer relative group border shadow-lg ${isDarkMode ? "border-white/10" : "border-black/5"}`}
+              >
+                <img
+                  src={img}
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  alt="Gallery"
+                />
+                <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors" />
+                <div className="absolute bottom-4 left-4 bg-black/60 p-2 rounded-xl backdrop-blur-md opacity-0 group-hover:opacity-100 transition-opacity">
+                  <ImageIcon className="text-[#BF953F]" size={20} />
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* --- SECCIÓN CEO E HISTORIAL --- */}
+      {/* --- CEO SECTION --- */}
       <section className="py-24 px-6 max-w-[1300px] mx-auto">
         <div className="grid lg:grid-cols-12 gap-16 items-center">
           <div className="lg:col-span-5">
@@ -239,12 +311,12 @@ export default function CorporacionChoquehuancaFinal() {
               className="relative aspect-[4/5] rounded-[3rem] overflow-hidden border-4 border-[#BF953F] cursor-pointer group shadow-2xl"
             >
               <img
-                src="https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&w=800"
+                src="/presentacion.jpeg"
                 className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
                 alt="CEO"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-90" />
-              <div className="absolute bottom-10 left-10 text-white">
+              <div className="absolute bottom-10 left-10 text-white z-10">
                 <p className="text-4xl font-black uppercase leading-none italic">
                   Alvaro Choquehuanca
                 </p>
@@ -255,7 +327,7 @@ export default function CorporacionChoquehuancaFinal() {
             </motion.div>
           </div>
           <div className="lg:col-span-7 space-y-10">
-            <h2 className="text-5xl font-black uppercase italic italic leading-none">
+            <h2 className="text-5xl font-black uppercase italic leading-none">
               Historia de la Corporación
             </h2>
             <div
@@ -273,9 +345,7 @@ export default function CorporacionChoquehuancaFinal() {
                 que centraliza la gestión y potencia cada empresa.
               </p>
               <div
-                className={`p-6 border-l-4 border-[#BF953F] ${
-                  isDarkMode ? "bg-white/5" : "bg-zinc-50"
-                }`}
+                className={`p-6 border-l-4 border-[#BF953F] ${isDarkMode ? "bg-white/5" : "bg-zinc-50"}`}
               >
                 <p className="italic font-medium">
                   "No construimos solo empresas. Construimos sistemas, líderes y
@@ -288,7 +358,7 @@ export default function CorporacionChoquehuancaFinal() {
         </div>
       </section>
 
-      {/* --- NUEVA SECCIÓN: UNIDADES ESTRATÉGICAS (INFO AGREGADA) --- */}
+      {/* --- UNIDADES ESTRATÉGICAS --- */}
       <section
         className={`py-24 px-6 ${isDarkMode ? "bg-white/5" : "bg-zinc-100"}`}
       >
@@ -331,7 +401,7 @@ export default function CorporacionChoquehuancaFinal() {
         </div>
       </section>
 
-      {/* --- SERVICIOS CON IMÁGENES --- */}
+      {/* --- SERVICIOS --- */}
       <section className="py-24 px-6 max-w-[1400px] mx-auto">
         <div className="mb-16">
           <h2 className="text-5xl font-black uppercase italic">
@@ -341,7 +411,6 @@ export default function CorporacionChoquehuancaFinal() {
             Calidad, Visión Empresarial y Desarrollo Humano
           </p>
         </div>
-
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
           {servicios.map((s) => (
             <motion.div
@@ -350,8 +419,8 @@ export default function CorporacionChoquehuancaFinal() {
               onClick={() => setSelectedService(s)}
               className={`group rounded-[3rem] overflow-hidden border cursor-pointer transition-all shadow-xl ${
                 isDarkMode
-                  ? "bg-zinc-900 border-white/5 hover:border-[#BF953F]/40"
-                  : "bg-white border-black/5 hover:border-[#BF953F]/40"
+                  ? "bg-zinc-900 border-white/5"
+                  : "bg-white border-black/5"
               }`}
             >
               <div className="h-64 relative overflow-hidden">
@@ -378,119 +447,7 @@ export default function CorporacionChoquehuancaFinal() {
         </div>
       </section>
 
-      {/* --- SECCIÓN: GALERÍA DE VIDEOS (CORREGIDA) --- */}
-      <section
-        className={`py-24 px-6 transition-colors duration-500 ${
-          isDarkMode ? "bg-[#050505]" : "bg-zinc-50"
-        }`}
-      >
-        {/* CAMBIO 2: Contenedor más pequeño (max-w-5xl en vez de 1400px) */}
-        <div className="max-w-5xl mx-auto">
-          <div className="mb-12 text-center md:text-left">
-            <h2 className="text-6xl font-black uppercase italic leading-none">
-              Cápsulas <br />
-              <span className="text-[#BF953F]">Corporativas</span>
-            </h2>
-          </div>
-
-          {/* Escenario del Video */}
-          <div className="relative group">
-            {/* CAMBIO 1 & 2: Aspecto de video normal y colores dinámicos según modo */}
-            <div
-              className={`relative aspect-video overflow-hidden rounded-[3rem] border shadow-2xl transition-colors duration-500 ${
-                isDarkMode
-                  ? "bg-zinc-900 border-white/5"
-                  : "bg-white border-black/5"
-              }`}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={currentVideoIndex}
-                  initial={{ opacity: 0, x: 100 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -100 }}
-                  transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0 w-full h-full"
-                  onClick={() => setSelectedVideo(videoData[currentVideoIndex])}
-                >
-                  {/* Video Preview */}
-                  <video
-                    src={videoData[currentVideoIndex].url}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    // CAMBIO 1: Opacidad ajustada para que se vea bien en ambos modos
-                    className="w-full h-full object-cover opacity-70 group-hover:opacity-100 group-hover:scale-105 transition-all duration-[1.5s] cursor-pointer"
-                  />
-
-                  {/* Botón Play */}
-                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="p-6 rounded-full bg-[#BF953F] text-black scale-0 group-hover:scale-100 transition-transform duration-500 shadow-[0_0_30px_rgba(191,149,63,0.5)]">
-                      <PlayCircle size={40} fill="currentColor" />
-                    </div>
-                  </div>
-
-                  {/* Indicador Numérico Inferior */}
-                  <div className="absolute bottom-8 left-10 flex items-center gap-4">
-                    <div className="h-[1px] w-16 bg-[#BF953F]/50" />
-                    <span className="text-4xl font-black italic text-[#BF953F]">
-                      0{currentVideoIndex + 1}
-                    </span>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-
-              {/* CAMBIO 3: Botones en los extremos DENTRO del video */}
-              <button
-                onClick={prevVideo}
-                className={`absolute left-4 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full backdrop-blur-md border transition-all group/btn ${
-                  isDarkMode
-                    ? "bg-black/30 text-white hover:bg-black/60 border-white/10"
-                    : "bg-white/40 text-zinc-900 hover:bg-white/80 border-black/10"
-                } hover:border-[#BF953F]`}
-              >
-                <ChevronLeft
-                  className="group-hover/btn:-translate-x-1 transition-transform"
-                  size={24}
-                />
-              </button>
-              <button
-                onClick={nextVideo}
-                className={`absolute right-4 top-1/2 -translate-y-1/2 z-20 p-4 rounded-full backdrop-blur-md border transition-all group/btn ${
-                  isDarkMode
-                    ? "bg-black/30 text-white hover:bg-black/60 border-white/10"
-                    : "bg-white/40 text-zinc-900 hover:bg-white/80 border-black/10"
-                } hover:border-[#BF953F]`}
-              >
-                <ChevronRight
-                  className="group-hover/btn:translate-x-1 transition-transform"
-                  size={24}
-                />
-              </button>
-            </div>
-
-            {/* Puntos de navegación manual (dots) */}
-            <div className="flex justify-center gap-2 mt-8">
-              {videoData.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentVideoIndex(index)}
-                  className={`transition-all duration-500 rounded-full ${
-                    index === currentVideoIndex
-                      ? "w-12 h-1 bg-[#BF953F]"
-                      : `w-2 h-1 ${
-                          isDarkMode ? "bg-white/20" : "bg-black/20"
-                        } hover:bg-[#BF953F]/50`
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* --- CONTACTO Y MAPA (COLOR REAL) --- */}
+      {/* --- CONTACTO --- */}
       <section className="py-24 px-6 max-w-[1400px] mx-auto border-t border-white/5">
         <div className="grid lg:grid-cols-12 gap-16">
           <div className="lg:col-span-5 space-y-12">
@@ -516,7 +473,7 @@ export default function CorporacionChoquehuancaFinal() {
               />
             </div>
           </div>
-          <div className="lg:col-span-7 h-[600px] rounded-[3rem] overflow-hidden border border-black/10 shadow-inner">
+          <div className="lg:col-span-7 h-[500px] rounded-[3rem] overflow-hidden border border-black/10 shadow-inner">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1912.9110292780654!2d-68.13620958!3d-16.4962295!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x915f206e12e79603%3A0xc0953d39579730f9!2sC.%20Yanacocha%2C%20La%20Paz!5e0!3m2!1ses!2sbo!4v1715456234567!5m2!1ses!2sbo"
               className="w-full h-full"
@@ -528,14 +485,11 @@ export default function CorporacionChoquehuancaFinal() {
 
       {/* --- FOOTER --- */}
       <footer
-        className={`py-24 text-center border-t ${
-          isDarkMode ? "border-white/5" : "border-black/5"
-        }`}
+        className={`py-24 text-center border-t ${isDarkMode ? "border-white/5" : "border-black/5"}`}
       >
-        {/* LOGO 3: FOOTER */}
         <img
           src="logo.png"
-          alt="Logo Footer"
+          alt="Logo"
           className="w-20 h-20 mx-auto mb-8 rounded-xl"
         />
         <p className="text-[10px] uppercase tracking-[1.5em] opacity-40 italic mb-4">
@@ -549,9 +503,9 @@ export default function CorporacionChoquehuancaFinal() {
         </p>
       </footer>
 
-      {/* --- MODALES DE INTERACCIÓN --- */}
+      {/* --- MODALES --- */}
       <AnimatePresence>
-        {/* MODAL DE SERVICIOS (EXISTENTE) */}
+        {/* 1. MODAL DE SERVICIOS */}
         {selectedService && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -560,8 +514,8 @@ export default function CorporacionChoquehuancaFinal() {
             className="fixed inset-0 z-[1000] flex items-center justify-center p-6 backdrop-blur-2xl bg-black/90"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
               className={`p-10 md:p-16 rounded-[3rem] max-w-3xl w-full relative overflow-hidden shadow-2xl ${
                 isDarkMode
                   ? "bg-zinc-900 border border-[#BF953F]/30"
@@ -576,31 +530,23 @@ export default function CorporacionChoquehuancaFinal() {
               </button>
               <div className="text-[#BF953F] mb-6">{selectedService.icon}</div>
               <h3
-                className={`text-4xl font-black uppercase italic mb-6 ${
-                  isDarkMode ? "text-white" : "text-black"
-                }`}
+                className={`text-4xl font-black uppercase italic mb-6 ${isDarkMode ? "text-white" : "text-black"}`}
               >
                 {selectedService.title}
               </h3>
               <p
-                className={`text-xl font-light italic leading-relaxed mb-10 ${
-                  isDarkMode ? "text-white/80" : "text-zinc-800"
-                }`}
+                className={`text-xl font-light italic leading-relaxed mb-10 ${isDarkMode ? "text-white/80" : "text-zinc-800"}`}
               >
                 {selectedService.long}
               </p>
               <div
-                className={`p-6 rounded-2xl ${
-                  isDarkMode ? "bg-white/5" : "bg-zinc-100"
-                }`}
+                className={`p-6 rounded-2xl ${isDarkMode ? "bg-white/5" : "bg-zinc-100"}`}
               >
                 <p className="text-xs font-black uppercase text-[#BF953F]">
                   Compromiso Choquehuanca
                 </p>
                 <p
-                  className={`text-sm mt-2 font-medium italic ${
-                    isDarkMode ? "text-white/50" : "text-zinc-600"
-                  }`}
+                  className={`text-sm mt-2 font-medium italic ${isDarkMode ? "text-white/50" : "text-zinc-600"}`}
                 >
                   Servicio orientado a personas que buscan excelencia, seguridad
                   y crecimiento sostenido.
@@ -610,7 +556,7 @@ export default function CorporacionChoquehuancaFinal() {
           </motion.div>
         )}
 
-        {/* MODAL DEL CEO (EXISTENTE) */}
+        {/* 2. MODAL DEL CEO (CONTENIDO RESTAURADO COMPLETO) */}
         {showCEO && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -634,16 +580,12 @@ export default function CorporacionChoquehuancaFinal() {
                 <X size={32} />
               </button>
               <h3
-                className={`text-4xl font-black uppercase italic mb-8 ${
-                  isDarkMode ? "text-white" : "text-black"
-                }`}
+                className={`text-4xl font-black uppercase italic mb-8 ${isDarkMode ? "text-white" : "text-black"}`}
               >
                 Alvaro Choquehuanca Apaza
               </h3>
               <div
-                className={`space-y-6 text-lg font-light italic leading-relaxed ${
-                  isDarkMode ? "text-white/80" : "text-zinc-800"
-                }`}
+                className={`space-y-6 text-lg font-light italic leading-relaxed ${isDarkMode ? "text-white/80" : "text-zinc-800"}`}
               >
                 <p>
                   Nuestra trayectoria comenzó hace más de 15 años con una visión
@@ -667,9 +609,7 @@ export default function CorporacionChoquehuancaFinal() {
                     Firma Oficial:
                   </p>
                   <p
-                    className={`text-2xl font-black italic ${
-                      isDarkMode ? "text-white" : "text-black"
-                    }`}
+                    className={`text-2xl font-black italic ${isDarkMode ? "text-white" : "text-black"}`}
                   >
                     A. Choquehuanca A.
                   </p>
@@ -679,21 +619,19 @@ export default function CorporacionChoquehuancaFinal() {
           </motion.div>
         )}
 
-        {/* --- NUEVO MODAL PARA REPRODUCCIÓN DE VIDEO (CORREGIDO) --- */}
+        {/* 3. MODAL DE VIDEO */}
         {selectedVideo && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[1000] flex items-center justify-center p-4 md:p-10 backdrop-blur-2xl bg-black/95"
-            onClick={() => setSelectedVideo(null)} // Cerrar al hacer click fuera
+            onClick={() => setSelectedVideo(null)}
           >
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              // Evitar cerrar al hacer click dentro del contenido
               onClick={(e) => e.stopPropagation()}
-              // CAMBIO 1: Fondo dinámico en el modal
               className={`w-full max-w-5xl relative rounded-[2rem] overflow-hidden shadow-2xl border border-[#BF953F]/30 ${
                 isDarkMode ? "bg-black" : "bg-white"
               }`}
@@ -705,18 +643,93 @@ export default function CorporacionChoquehuancaFinal() {
                 <X size={28} />
               </button>
               <div className="aspect-video w-full bg-black">
-                {/* Usamos video tag con controls y autoPlay. Importante: raw=1 en el link de dropbox */}
                 <video
                   src={selectedVideo.url}
                   controls
                   autoPlay
                   className="w-full h-full object-contain"
-                  // Eliminado poster={selectedVideo.thumbnail} porque no existe en tus datos
                 >
                   Tu navegador no soporta el elemento de video.
                 </video>
               </div>
-              {/* Eliminada la sección de título y descripción del modal porque no existen en tus datos */}
+            </motion.div>
+          </motion.div>
+        )}
+
+        {/* 4. MODAL DE IMAGEN DE GALERÍA */}
+        {selectedHeroImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[1000] flex items-center justify-center p-6 backdrop-blur-2xl bg-black/90"
+            onClick={() => setSelectedHeroImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className={`max-w-4xl w-full rounded-[3rem] overflow-hidden shadow-2xl relative flex flex-col md:flex-row ${
+                isDarkMode
+                  ? "bg-zinc-900 border border-[#BF953F]/30"
+                  : "bg-white"
+              }`}
+            >
+              <button
+                onClick={() => setSelectedHeroImage(null)}
+                className="absolute top-4 right-4 z-20 p-2 bg-black/50 text-white rounded-full hover:bg-[#BF953F] transition-colors"
+              >
+                <X size={24} />
+              </button>
+
+              <div className="w-full md:w-1/2 h-64 md:h-auto">
+                <img
+                  src={selectedHeroImage}
+                  className="w-full h-full object-cover"
+                  alt="Detalle"
+                />
+              </div>
+
+              <div className="w-full md:w-1/2 p-10 flex flex-col justify-center">
+                <div className="flex items-center gap-2 mb-4">
+                  <img
+                    src="logo.png"
+                    className="w-10 h-10 rounded-lg"
+                    alt="Logo"
+                  />
+                  <span className="text-[#BF953F] text-xs font-black uppercase tracking-widest">
+                    Corporación Choquehuanca
+                  </span>
+                </div>
+
+                <h3
+                  className={`text-3xl font-black uppercase italic mb-4 leading-none ${isDarkMode ? "text-white" : "text-black"}`}
+                >
+                  Infraestructura & Desarrollo
+                </h3>
+
+                <p
+                  className={`text-sm leading-relaxed mb-6 ${isDarkMode ? "text-white/70" : "text-zinc-600"}`}
+                >
+                  Esta imagen representa parte de nuestros activos y proyectos
+                  en desarrollo. En Corporación Choquehuanca, cada espacio está
+                  diseñado pensando en la expansión, la calidad y el bienestar
+                  de nuestros socios y clientes.
+                </p>
+
+                <div
+                  className={`p-4 rounded-2xl ${isDarkMode ? "bg-white/5" : "bg-zinc-100"}`}
+                >
+                  <p className="text-[#BF953F] font-bold text-xs uppercase mb-1">
+                    Visión
+                  </p>
+                  <p
+                    className={`text-xs italic ${isDarkMode ? "text-white/50" : "text-zinc-500"}`}
+                  >
+                    "Piensa en grande, piensa en expansión."
+                  </p>
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         )}
@@ -724,6 +737,8 @@ export default function CorporacionChoquehuancaFinal() {
     </div>
   );
 }
+
+// COMPONENTES AUXILIARES
 function HistoryCard({ icon, title, desc }: any) {
   return (
     <div className="bg-black/5 p-6 rounded-[2rem] border border-[#BF953F]/20 hover:border-[#BF953F] transition-all">
@@ -737,9 +752,7 @@ function HistoryCard({ icon, title, desc }: any) {
 function ContactItem({ icon, label, text, isDark }: any) {
   return (
     <div
-      className={`flex gap-6 items-center p-6 rounded-2xl border ${
-        isDark ? "bg-white/5 border-white/5" : "bg-zinc-50 border-black/5"
-      }`}
+      className={`flex gap-6 items-center p-6 rounded-2xl border ${isDark ? "bg-white/5 border-white/5" : "bg-zinc-50 border-black/5"}`}
     >
       <div className="p-4 bg-[#BF953F]/10 text-[#BF953F] rounded-2xl">
         {icon}
@@ -749,9 +762,7 @@ function ContactItem({ icon, label, text, isDark }: any) {
           {label}
         </p>
         <p
-          className={`text-lg font-bold italic leading-tight ${
-            !isDark && "text-black"
-          }`}
+          className={`text-lg font-bold italic leading-tight ${!isDark && "text-black"}`}
         >
           {text}
         </p>
